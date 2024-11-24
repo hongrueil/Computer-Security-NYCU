@@ -24,12 +24,12 @@ typedef struct //for check sum
 
 typedef struct
 {
- unsigned short id;   // ID
- unsigned short flags; // DNS Flags
- unsigned short qcount; // Question Count
- unsigned short ans;  // Answer Count
- unsigned short auth; // Authority RR
- unsigned short add;  // Additional RR
+    unsigned short id;   // ID
+    unsigned short flags; // DNS Flags
+    unsigned short qcount; // Question Count
+    unsigned short ans;  // Answer Count
+    unsigned short auth; // Authority RR
+    unsigned short add;  // Additional RR
 }dns_hdr;
 
 typedef struct
@@ -41,26 +41,26 @@ typedef struct
 
 unsigned short csum(unsigned short *ptr,int nbytes) 
 {
- register long sum;
- unsigned short oddbyte;
- register short answer;
+    register long sum;
+    unsigned short oddbyte;
+    register short answer;
+    
+    sum=0;
+    while(nbytes>1) {
+        sum+=*ptr++;
+        nbytes-=2;
+    }    
+    if(nbytes==1) {
+    oddbyte=0;
+    *((unsigned char *)&oddbyte)=*(unsigned char *)ptr;
+    sum+=oddbyte;
+    }
 
- sum=0;
- while(nbytes>1) {
-  sum+=*ptr++;
-  nbytes-=2;
- }
- if(nbytes==1) {
-  oddbyte=0;
-  *((unsigned char *)&oddbyte)=*(unsigned char *)ptr;
-  sum+=oddbyte;
- }
-
- sum = (sum>>16)+(sum & 0xffff);
- sum = sum + (sum>>16);
- answer=(short)~sum;
- 
- return(answer);
+    sum = (sum>>16)+(sum & 0xffff);
+    sum = sum + (sum>>16);
+    answer=(short)~sum;
+    
+    return(answer);
 }
 
 void dns_format(char * buff, const char * hostname)  // for change hostname into right format
