@@ -96,28 +96,27 @@ void dns_hdr_create(dns_hdr *dns) //藉由看 wireshark 來看出 query 要怎�
  dns->add = 0;
 }
 
-void dns_send(char *trgt_ip, int trgt_p, char *dns_srv, int dns_p,
- unsigned char *dns_record)
+void dns_send(char *trgt_ip, int trgt_p, char *dns_srv, int dns_p, unsigned char *dns_record)
 {
     printf("in send" );
- // Building the DNS request data packet
- 
- unsigned char dns_data[128];
- 
- dns_hdr *dns = (dns_hdr *)&dns_data;
- dns_hdr_create(dns);
- 
- unsigned char *dns_name, dns_rcrd[32];
- dns_name = (unsigned char *)&dns_data[sizeof(dns_hdr)];
- strcpy(dns_rcrd, dns_record);
- dns_format(dns_name , dns_rcrd);
- printf("%s/n",dns_name);
+    // Building the DNS request data packet
 
- 
- query *q;
- q = (query *)&dns_data[sizeof(dns_hdr) + (strlen(dns_name)+1)];
- q->qtype = htons(0x00ff);
- q->qclass = htons(0x1);
+    unsigned char dns_data[128];
+
+    dns_hdr *dns = (dns_hdr *)&dns_data;
+    dns_hdr_create(dns);
+
+    unsigned char *dns_name, dns_rcrd[32];
+    dns_name = (unsigned char *)&dns_data[sizeof(dns_hdr)];
+    strcpy(dns_rcrd, dns_record);
+    dns_format(dns_name , dns_rcrd);
+    printf("%s/n",dns_name);
+
+
+    query *q;
+    q = (query *)&dns_data[sizeof(dns_hdr) + (strlen(dns_name)+1)];
+    q->qtype = htons(0x00ff);
+    q->qclass = htons(0x1);
 
  
  
